@@ -61,9 +61,10 @@ namespace Veldrid.NeoDemo
                 windowCI,
                 gdOptions,
                 //VeldridStartup.GetPlatformDefaultBackend(),
+                GraphicsBackend.Direct3D11,
                 //GraphicsBackend.Metal,
                 // GraphicsBackend.Vulkan,
-                GraphicsBackend.OpenGL,
+                //GraphicsBackend.OpenGL,
                 //GraphicsBackend.OpenGLES,
                 out _window,
                 out _gd);

@@ -46,8 +46,11 @@ namespace Veldrid.NeoDemo.Objects
             _ib = factory.CreateBuffer(new BufferDescription(s_indices.SizeInBytes(), BufferUsage.IndexBuffer));
             cl.UpdateBuffer(_ib, 0, s_indices);
 
-            ImageSharpCubemapTexture imageSharpCubemapTexture = new ImageSharpCubemapTexture(_right, _left, _top, _bottom, _back, _front, false);
+            ImageSharpCubemapTexture otherImageSharpCubemapTexture = new ImageSharpCubemapTexture(_bottom, _bottom, _bottom, _bottom, _bottom, _bottom, false);
+            Texture otherTextureCube = otherImageSharpCubemapTexture.CreateDeviceTexture(gd, factory);
+            TextureView otherTextureView = factory.CreateTextureView(new TextureViewDescription(otherTextureCube));
 
+            ImageSharpCubemapTexture imageSharpCubemapTexture = new ImageSharpCubemapTexture(_right, _left, _top, _bottom, _back, _front, false);
             Texture textureCube = imageSharpCubemapTexture.CreateDeviceTexture(gd, factory);
             TextureView textureView = factory.CreateTextureView(new TextureViewDescription(textureCube));
 
@@ -62,6 +65,8 @@ namespace Veldrid.NeoDemo.Objects
             _layout = factory.CreateResourceLayout(new ResourceLayoutDescription(
                 new ResourceLayoutElementDescription("Projection", ResourceKind.UniformBuffer, ShaderStages.Vertex),
                 new ResourceLayoutElementDescription("View", ResourceKind.UniformBuffer, ShaderStages.Vertex),
+                new ResourceLayoutElementDescription("OtherCubeTexture", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
+                new ResourceLayoutElementDescription("OtherCubeSampler", ResourceKind.Sampler, ShaderStages.Fragment),
                 new ResourceLayoutElementDescription("CubeTexture", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
                 new ResourceLayoutElementDescription("CubeSampler", ResourceKind.Sampler, ShaderStages.Fragment)));
 
@@ -82,6 +87,8 @@ namespace Veldrid.NeoDemo.Objects
                 _layout,
                 sc.ProjectionMatrixBuffer,
                 sc.ViewMatrixBuffer,
+                otherTextureView,
+                gd.PointSampler,
                 textureView,
                 gd.PointSampler));
 
